@@ -2,32 +2,32 @@ from dotenv import load_dotenv
 import anthropic
 
 load_dotenv()                     
-client = anthropic.Anthropic()    
 
-save_chat = []
 
-while True:
-    user_input = input("Digite os inputs: ")
-    if user_input.lower() == "sair":
-        break
-    save_chat.append({"role": "user", "content": user_input})
-    
-    response = client.messages.create(
-            model="claude-haiku-5-5",
-            max_tokens=2000,
-            messages=save_chat
-        )
-    think = ""
-    for block in response.content:
-        if block.type == "thinking":
-            think = block.thinking
-        elif block.type == "text":
-                    reply = block.text
-        
-        
+class ChatBot:
+        def __init__(self,system:str,client:object,model:str ="claude-haiku-5-5"):
             
-    
-    print("RESPOSTA: ",reply)
-    save_chat.append({"role": "assistant", "content": reply})
-    #print("Contexto: ",save_chat )
-    
+            self.save_chat: list[dict[str,str]] = []
+            self.model = model
+            self.system = system
+            self.client = client
+        def enviar(self, message:str) -> str:
+            self.save_chat.append({"role":"user","content":message})
+            answer = self.client.messages.create(model=self.model,system = self.system ,max_tokens = 2000,messages = self.save_chat)
+            reply = ""
+            for block in answer.content:
+                  if block.type == "text":  
+                    reply += block.text
+            self.save_chat.append({"role":"assistant","content":reply})
+            return reply
+
+
+client = anthropic.Anthropic()  
+bot = ChatBot("Você é um tutor, paciente que responde em português",client)
+while True:
+     user_input = input("Digite os inputs: ")
+     if user_input.lower() == "sair":
+             break
+     reply = bot.enviar(user_input)
+     print(reply)
+     
