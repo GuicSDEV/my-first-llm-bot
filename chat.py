@@ -29,27 +29,27 @@ class ChatBot:
              with open(path, "w", encoding="utf-8") as f:
                 json.dump(self.save_chat, f, ensure_ascii=False, indent=2)
 
-
+if __name__ == "__main__":
             
-client = anthropic.Anthropic()  
-bot = ChatBot("Você é um tutor, paciente que responde em português",client)
-while True:
-     user_input = input("Digite os inputs: ")
-     if user_input.lower() == "/reset":
-            bot.reset()
-            print("O historico de mensagens foi apagado")
-            continue
-     if user_input.lower() == "/save":
-            path = input("caminho desejado .json:  ")
-            if path: 
-                 bot.save(path)
-                 print("Conversa salve em:",path)
-            else:
-                bot.save()
-                print("Conversa salve em:saved_chat.json")
-            continue
-     if user_input.lower() == "sair":
-             break
-     reply = bot.enviar(user_input)
-     print(reply)
-     
+    client = anthropic.Anthropic()  
+    bot = ChatBot("Você é um tutor, paciente que responde em português",client)
+    while True:
+        user_input = input("Digite os inputs: ")
+        if user_input.lower() == "/reset":
+                bot.reset()
+                print("O historico de mensagens foi apagado")
+                continue
+        if user_input.lower() == "/save":
+                path = input("caminho desejado .json:  ")
+                if path: 
+                    bot.save(path)
+                    print("Conversa salve em:",path)
+                else:
+                    bot.save()
+                    print("Conversa salve em:saved_chat.json")
+                continue
+        if user_input.lower() == "sair":
+                break
+        reply = bot.enviar(user_input)
+        print(reply)
+        
