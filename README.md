@@ -13,7 +13,7 @@ Conversa salva em: saved_chat.json
 Digite os inputs: sair
 ```
 
-<!-- Replace with a real conversation from your terminal, or a GIF: ![demo](demo.gif) -->
+Replace with a real conversation from your terminal, or a GIF: ![demo](demo.gif)
 
 ## Requirements
 
