@@ -1,6 +1,19 @@
 # My First LLM Bot
 
-A command-line chatbot built with Python and the Anthropic API. It sends the conversation history with each request and can save that history as a JSON file.
+A command-line chatbot built with Python and the Anthropic API. It keeps the conversation history in memory, sends it with each request, and can save it as a JSON file.
+
+## Demo
+
+```text
+Digite os inputs: oi
+Oi! Tudo bem? Sou seu tutor e estou aqui para ajudar com qualquer dúvida que você tenha.
+Digite os inputs: /save
+caminho desejado .json:
+Conversa salva em: saved_chat.json
+Digite os inputs: sair
+```
+
+<!-- Replace with a real conversation from your terminal, or a GIF: ![demo](demo.gif) -->
 
 ## Requirements
 
@@ -19,7 +32,7 @@ A command-line chatbot built with Python and the Anthropic API. It sends the con
 2. Install the dependencies:
 
    ```bash
-   pip install anthropic python-dotenv pytest
+   pip install -r requirements.txt
    ```
 
 3. Create a `.env` file in the project directory and add your API key:
@@ -28,7 +41,7 @@ A command-line chatbot built with Python and the Anthropic API. It sends the con
    ANTHROPIC_API_KEY=your_api_key
    ```
 
-   `.env` and `.venv/` are excluded from Git by `.gitignore`.
+   `.gitignore` keeps `.env`, `.venv/` and saved conversations (`*.json`) out of Git.
 
 ## Run
 
@@ -36,30 +49,43 @@ A command-line chatbot built with Python and the Anthropic API. It sends the con
 python chat.py
 ```
 
-Enter a message to chat. The available commands are:
+Type a message to chat. Commands:
 
-- `sair` exits the program.
-- `/reset` clears the conversation currently held in memory.
-- `/save` prompts for a JSON file path and saves the conversation. Press Enter at the path prompt to use `saved_chat.json`.
+| Command  | What it does |
+|----------|--------------|
+| `/reset` | Clears the conversation held in memory. |
+| `/save`  | Asks for a file path and saves the conversation as JSON. Press Enter to use `saved_chat.json`. |
+| `sair`   | Exits the program. |
 
-The bot uses the system prompt `Você é um tutor, paciente que responde em português` and defaults to the `claude-haiku-5-5` model. The model and system prompt can be changed when constructing `ChatBot` in `chat.py`.
+The bot uses the system prompt `Você é um tutor, paciente que responde em português` and defaults to the `claude-haiku-5-5` model. Both can be changed when creating `ChatBot` in `chat.py`.
 
-Saved JSON files are not loaded automatically when the program starts. The conversation is kept in memory while the program runs, unless you explicitly save it.
+## Project structure
+
+```text
+chat.py           # ChatBot class and the command-line loop
+test_chat.py      # pytest tests
+requirements.txt
+```
 
 ## Tests
-
-Run the test suite with:
 
 ```bash
 pytest
 ```
 
-The current tests cover initial history, resetting the conversation, and saving it to a file.
+The tests cover the initial empty history, `/reset`, and saving to a file. They do not call the API.
 
 ## What I Learned
 
-- **The model does not retain local conversation state.** The app stores user and assistant messages in `save_chat` and sends that history with each API request to provide conversational context.
-- **API responses contain content blocks.** This bot adds the text from blocks whose type is `text` to the reply; it does not separately handle or display other block types.
-- **A system prompt sets the assistant's instructions.** It is passed separately from the user/assistant message history on every request.
-- **Saving and loading are separate features.** The bot can write the in-memory history to JSON, but currently does not restore a saved conversation on startup.
-- **Keep credentials out of source control.** `python-dotenv` loads the API key from `.env`, and `.gitignore` excludes that file from Git.
+<!-- Write this part yourself, in first person. Ideas:
+- Turning a script into a class: what goes in __init__ vs. methods, and why save_chat is an instance variable
+- Why the model needs the whole history on every request
+- Writing my first pytest tests, and why `if __name__ == "__main__":` was needed for them to run
+- Reading tracebacks to find bugs
+-->
+
+## Next steps
+
+- Load a saved conversation when the bot starts.
+- Stream the reply as it is generated.
+- Add tests for `enviar` using a fake client.

@@ -1,4 +1,16 @@
+# Secrets
 .env
+ 
+# Virtual environment
 .venv/
-.env
-.venv/
+ 
+# Saved conversations
+*.json
+ 
+# Python cache
+__pycache__/
+*.pyc
+.pytest_cache/
+ 
+# macOS
+.DS_Store
